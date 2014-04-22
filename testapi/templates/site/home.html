@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="panel panel-default">
+  <div class="panel-heading">Тестовое задание</div>
+  <div class="panel-body">
+    Сделать простую реализацию механизма sms хендлеров (или предложить свою реализацию).<br>
+    Оба гейта отвечают в формате json<br>
+    пример удачного ответа {'status': 'ok', 'phone': '79149009900'}<br>
+    пример ошибки {'status': 'error', 'phone': '79149009900', 'error_code': ­3500, 'error_msg': 'Невозможно отправить сообщение указанному абоненту'}<br>
+    Чтобы отправить смску необходимо отправить post запрос в api гейта Пример использования:<br>
+    #get_handler фабрика, которая возвращает нам желаемый хендлер #handler_name может быть названием класса хендлера<br>
+    sms_handler = get_handler(handler_name)<br>
+    sms_handler.send(user_data)<br>
+1) Реализовать функцию get_handler или предложить свой вариант<br>
+2) Сделать два простых хендлера, которые принимают сообщения по следующим адресам:<br>
+­ sms­центр http://smsc.ru/some­api/message/ #предположим, что оба эти адреса отвечают нам в формате, описанным выше<br>
+­ sms­траффик http://smstraffic.ru/super­api/message/<br>
+3) Механизм хендлеров должен иметь какой­то общий интерфейс и быть расширяем, добавление новых sms­гейтов не должно занимать больших усилий<br>
+4) Сделать логгирование отправки сообщений, можно хранить в бд (django orm)<br>
+  </div>
+</div>
+<div class="well">Исходный код здесь</div>
+<h2>Реализация:</h2>
+<div class="panel panel-default">
+<div class="panel-heading">
+Отправляем некие данные методом POST на /sms-api/message/<br>
+Номер телефона абонента должен быть, к примеру, 79149009900, иначе ошибка
+</div>
+<div class="panel-body">
+<form class="form-horizontal" role="form" method="post" action="/sms-api/message/">
+    {% for f in form %}
+        <div class="form-group">
+            <label class="col-sm-2 control-label">{{f.label}}</label>
+            <div class="col-sm-5">
+                {{f}}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-5">
+      <button type="submit" class="btn btn-default">Отправить</button>
+    </div>
+  </div>
+</form>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+Отправляем сообщение в /some-api/message/
+Это сообщение должно содержать, скажем, не более 20 знаков
+</div>
+<div class="panel-body">
+ошибка <a href="/some-api/this message is too long">/some-api/this message is too long</a><br>
+верно <a href="/some-api/some short message">/some-api/some short message</a>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+Отправляем сообщение в /super-api/message/
+Это сообщение должно содержать, скажем, более 20 знаков
+</div>
+<div class="panel-body">
+ошибка <a href="/super-api/some short message">/super-api/some short message</a><br>
+верно <a href="/super-api/this message is too long">/super-api/this message is too long</a>
+</div>
+</div>
+
+<h2>Логи</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Level</th>
+          <th>Message</th>
+          <th>Info</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in log %}
+            <tr>
+            <td>{{l.id}}</td>
+            <td>{{l.level}}</td>
+            <td>{{l.message}}</td>
+            <td>{{l.info}}</td>
+            <td>{{l.timestamp}}</td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+{% endblock body %}

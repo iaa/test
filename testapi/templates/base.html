@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Recipe</title>
+        <meta charset="utf-8" />
+        {% block head %}
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'site/css/bootstrap.min.css' %}">
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container-fluid" style="padding:20px;">
+            <div class="row">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
