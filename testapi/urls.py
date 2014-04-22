@@ -2,11 +2,8 @@
 from django.conf.urls import patterns, include, url
 from tastypie.api import Api
 from api.resources import SmsResource
-
-# import the logging library
 import logging
 
-# Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
